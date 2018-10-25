@@ -1,0 +1,115 @@
+CREATE TABLE member ( 
+email varchar(25) NOT NULL, 
+fname varchar(25) NOT NULL,
+MI char(1),
+lname varchar(25) NOT NULL,
+phoneNo char(10),
+year int(1),
+major varchar(25),
+gender varchar(10),
+points int(4),
+team varchar(25),
+CONSTRAINT PRIMARY KEY (email)
+);
+
+
+CREATE TABLE team ( 
+Tname varchar(25) NOT NULL, 
+Tmeet_time time, 
+Tbudget int(10), 
+LeadEmail varchar(25) NOT NULL,
+AdvEmail varchar(25),
+CONSTRAINT PRIMARY KEY (Tname)
+);
+
+CREATE TABLE contributor (
+Cemail varchar(25) NOT NULL, 
+Cfname varchar(25) NOT NULL,
+Clname varchar(25) NOT NULL,
+association varchar(25),
+address varchar(25),
+CphoneNo char(10),
+CONSTRAINT PRIMARY KEY(Cemail)
+);
+
+CREATE TABLE committee (
+Cname varchar(25) NOT NULL,
+CmeetTime time,
+responsibilities varchar(25),
+ChairEmail varchar(25),
+CONSTRAINT PRIMARY KEY(Cname)
+);
+
+
+CREATE TABLE event (
+eventID int(10) NOT NULL,
+Ename varchar(25),
+location varchar(25),
+eDate date,
+eTime time,
+pointValue int(3),
+Ebudget int(4),
+duration time,
+noAttended int(4),
+CONSTRAINT PRIMARY KEY(eventID)
+);
+
+CREATE TABLE sponsor (
+Semail varchar(25) NOT NULL,
+SeventID varchar(25) NOT NULL,
+amountDonated int(5),
+CONSTRAINT PRIMARY KEY(Semail, SeventID)
+);
+
+CREATE TABLE attendance (
+attendEmail varchar(25) NOT NULL,
+eventIDAttend int(5) NOT NULL,
+CONSTRAINT PRIMARY KEY (attendEmail, eventIDAttend)
+);
+
+CREATE TABLE host_event (
+Hname varchar(25) NOT NULL,
+HostedEventID int(5) NOT NULL,
+CONSTRAINT PRIMARY KEY (Hname, HostedEventID)
+);
+
+CREATE TABLE join_team (
+TemMemEmail varchar(25) NOT NULL,
+TeamName varchar(25) NOT NULL,
+CONSTRAINT PRIMARY KEY(TemMemEmail, TeamName)
+);
+
+
+ALTER TABLE member ADD (
+CONSTRAINT FOREIGN KEY (team) REFERENCES team(Tname) 
+);
+
+ALTER TABLE team ADD(
+CONSTRAINT FOREIGN KEY (LeadEmail) REFERENCES member(Memail),
+CONSTRAINT FOREIGN KEY(AdvEmail) REFERENCES contributor(Cemail)
+);
+
+ALTER TABLE committee ADD(
+CONSTRAINT FOREIGN KEY (ChairEmail) REFERENCES member(email)
+);
+
+ALTER TABLE sponsor ADD(
+CONSTRAINT FOREIGN KEY (Semail) REFERENCES contributor(Cemail),
+CONSTRAINT FOREIGN KEY (SeventID) REFERENCES event(eventID)
+);
+
+ALTER TABLE attendance ADD(
+CONSTRAINT FOREIGN KEY(attendEmail) REFERENCES member(email),
+CONSTRAINT FOREIGN KEY(eventIDAttend) REFERENCES event(eventID)
+
+);
+
+ALTER TABLE host_event ADD(
+CONSTRAINT FOREIGN KEY(Hname) REFERENCES committee(Cname),
+CONSTRAINT FOREIGN KEY(HostedEventID) REFERENCES event(eventID)
+);
+
+ALTER TABLE join_team ADD (
+CONSTRAINT FOREIGN KEY(TemMemEmail) REFERENCES member(email),
+CONSTRAINT FOREIGN KEY(TeamName) REFERENCES team(Tname)
+);
